@@ -19,7 +19,10 @@ PING_TARGETS=(
   "cloudflare.com"
 )
 
-# URL file dùng cho test download (nên là file tĩnh, dung lượng vài chục MB)
+# URL API mặc định để gửi báo cáo (sẽ được thay bằng domain production của bạn)
+DEFAULT_REPORT_URL="https://vps-benchmark-hophamlam.vercel.app/api/benchmark/report"
+
+# URL file dùng để đo tốc độ download (có thể thay bằng endpoint CDN của bạn)
 DOWNLOAD_URL_DEFAULT="https://speed.hetzner.de/100MB.bin"
 
 ###
@@ -125,13 +128,48 @@ compute_score() {
 }
 
 ###
-### Hàm main: chạy toàn bộ benchmark local
+### Gửi JSON report tới API nếu cấu hình REPORT_URL và REPORT_TOKEN
+### @param $1 - JSON string của payload
+###
+send_report_if_configured() {
+  local json_payload="$1"
+
+  # Ưu tiên REPORT_URL từ env (dev / override), nếu không thì dùng DEFAULT_REPORT_URL
+  local report_url="${REPORT_URL:-$DEFAULT_REPORT_URL}"
+  local report_token="${REPORT_TOKEN:-}"
+
+  if [[ -z "$report_token" ]]; then
+    echo
+    echo "[i] REPORT_TOKEN is not set. Skipping remote report."
+    return 0
+  fi
+
+  if ! command_exists curl; then
+    echo
+    echo "[i] curl is not available. Skipping remote report."
+    return 0
+  fi
+
+  echo
+  echo "[i] Sending benchmark report to API..."
+
+  # Gửi JSON payload kèm header X-REPORT-TOKEN
+  curl -sS -X POST "$report_url" \
+    -H "Content-Type: application/json" \
+    -H "X-REPORT-TOKEN: $report_token" \
+    -d "$json_payload" >/dev/null 2>&1 || {
+      echo "[!] Failed to send report. This does not affect local output."
+    }
+}
+
+###
+### Hàm main: chạy toàn bộ benchmark local và (nếu cấu hình) gửi report tới API
 ### @returns 0 luôn, để tránh làm fail CI nếu dùng sau này
 ###
 main() {
   print_heading "vps-benchmark-hophamlam (local benchmark v1)"
-  echo "This script runs a very simple, local-only benchmark."
-  echo "It does NOT send any data anywhere yet."
+  echo "This script runs a very simple, local benchmark."
+  echo "Optionally, it can POST a JSON report to vps-benchmark-hophamlam if configured."
   echo
 
   # Kiểm tra command cần thiết
@@ -196,8 +234,41 @@ main() {
   printf "Overall score (0-10): %s\n" "$score"
 
   echo
-  echo "Note: This is a very early, local-only benchmark."
-  echo "      Future versions will send structured results to vps-benchmark-hophamlam API."
+  echo "Note: This is a very early benchmark script."
+  echo "      You can choose to share this result with vps-benchmark-hophamlam."
+
+  # Chuẩn bị JSON payload để gửi lên API (đơn giản, không cần jq)
+  # Lưu ý: không escape đặc biệt vì các field hiện tại đều là số/chuỗi đơn giản.
+  local json_payload
+  json_payload=$(cat <<EOF
+{
+  "serverLabel": null,
+  "avgPingMs": ${avg_ping_overall:-0},
+  "downloadMbps": ${speed_mbps:-0},
+  "score": ${score:-0},
+  "payload": {
+    "pingTargets": ["google.com", "cloudflare.com"],
+    "avgPingMs": ${avg_ping_overall:-0},
+    "download": {
+      "url": "${DOWNLOAD_URL_DEFAULT}",
+      "timeSeconds": ${time_total:-0},
+      "speedMbps": ${speed_mbps:-0}
+    }
+  }
+}
+EOF
+)
+
+  echo
+  read -r -p "Share this result with vps-benchmark-hophamlam (y/N)? " answer
+  case "$answer" in
+    [Yy]*)
+      send_report_if_configured "$json_payload"
+      ;;
+    *)
+      echo "[i] Result kept local only. No data was sent."
+      ;;
+  esac
 }
 
 main "$@" || true
