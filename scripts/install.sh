@@ -14,6 +14,12 @@ REPO_RAW_BASE="https://raw.githubusercontent.com/hophamlam/vps-benchmark/refs/he
 SCRIPT_PATH="scripts/vps-benchmark.sh"
 TMP_FILE="/tmp/vps-benchmark-hophamlam.sh"
 
+cleanup() {
+  rm -f "${TMP_FILE}"
+}
+
+trap cleanup EXIT
+
 echo ">>> vps-benchmark-hophamlam installer"
 echo "Downloading latest benchmark script..."
 
@@ -30,8 +36,6 @@ echo "Running benchmark..."
 echo
 
 bash "${TMP_FILE}" || true
-
-rm -f "${TMP_FILE}"
 
 echo
 echo "Done. Temporary files have been removed."
