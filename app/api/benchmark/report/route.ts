@@ -51,10 +51,8 @@ export async function POST(request: NextRequest) {
 
   const data = parsed.data;
 
-  const ip =
-    request.headers.get("x-forwarded-for") ??
-    request.ip ??
-    null;
+  const ipHeader = request.headers.get("x-forwarded-for");
+  const ip = ipHeader ? ipHeader.split(",")[0]?.trim() : null;
 
   try {
     const [row] = await db/* sql */`
