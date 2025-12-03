@@ -1,36 +1,99 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+## vps-benchmark-hophamlam
 
-## Getting Started
+Landing page + experimental VPS benchmark tooling by **hophamlam**.
 
-First, run the development server:
+- Frontend: [Next.js](https://nextjs.org) App Router, Tailwind CSS, custom theme generated via [tweakcn](https://tweakcn.com/editor/theme?tab=other) for shadcn-style tokens.
+- i18n: simple VI/EN dictionary with a small `I18nProvider`.
+- Theming: light/dark toggle using CSS variables and a `ThemeProvider`.
+- CLI: early **local-only** benchmark script for VPS (no data is sent anywhere yet).
+
+---
+
+## 1. Development (web)
+
+Install dependencies:
+
+```bash
+npm install
+```
+
+Run dev server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open `http://localhost:3000` to see the landing page:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- Hero section styled in a modern SaaS style (inspired by Framer).
+- Banner section explaining the project goals and how benchmarking will work.
+- Language switch (VI/EN) and theme switch (light/dark) in the header.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
+## 2. Local VPS benchmark script (v1)
 
-To learn more about Next.js, take a look at the following resources:
+The repository includes an **early, local-only** benchmark script:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- File: `scripts/vps-benchmark.sh`
+- What it does (v1):
+  - Pings a couple of public hosts (currently `google.com` and `cloudflare.com`).
+  - Runs a simple HTTP download test against a public file.
+  - Calculates a very rough combined “score” (0–10) from average ping and download speed.
+  - Prints a human-readable summary in **English**.
+- What it does **not** do yet:
+  - Does **not send** any data to any API or database.
+  - Does **not install** any system packages automatically.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### 2.1. Running the script on a VPS
 
-## Deploy on Vercel
+Copy the script to your VPS and run it:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```bash
+scp scripts/vps-benchmark.sh user@your-vps:/tmp/vps-benchmark.sh
+ssh user@your-vps
+chmod +x /tmp/vps-benchmark.sh
+/tmp/vps-benchmark.sh
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+You should see a summary like:
+
+- Average latency per host.
+- Overall average latency.
+- Download time + speed (Mbps).
+- A temporary combined score (0–10).
+
+### 2.2. Future `curl | bash` entrypoint
+
+The long-term plan is to expose a single-line entrypoint similar to:
+
+```bash
+bash <(curl -fsSL https://vps-benchmark-hophamlam.xyz/install)
+```
+
+Where:
+
+- `install` will be a tiny shell script that:
+  - Downloads the latest CLI / benchmark script.
+  - Runs it.
+  - Cleans up temporary files.
+- The CLI will then be responsible for:
+  - Running richer benchmarks (network, I/O, etc.).
+  - Posting structured results back to the vps-benchmark-hophamlam API.
+
+This is **not implemented yet**; for now, only the local script exists.
+
+---
+
+## 3. Roadmap (high-level)
+
+- Web:
+  - Add `/leaderboard` and `/result/:id` pages (mock first, then backed by real data).
+  - Integrate with a Postgres/Neon backend for storing benchmark runs.
+- CLI:
+  - Turn the shell script into a proper CLI (possibly in Go or Node).
+  - Add more metrics: disk I/O, CPU quick tests, more network targets.
+  - Implement secure result submission to the web API.
+
+This project is in an **early exploration phase** and is expected to evolve quickly.
+
