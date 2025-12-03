@@ -153,11 +153,12 @@ send_report_if_configured() {
   echo
   echo "[i] Sending benchmark report to API..."
 
-  # Gửi JSON payload kèm header X-REPORT-TOKEN
-  curl -sS -X POST "$report_url" \
+  # Gửi JSON payload kèm header X-REPORT-TOKEN và in response (debug)
+  curl -v -X POST "$report_url" \
     -H "Content-Type: application/json" \
     -H "X-REPORT-TOKEN: $report_token" \
-    -d "$json_payload" >/dev/null 2>&1 || {
+    -d "$json_payload" || {
+      echo
       echo "[!] Failed to send report. This does not affect local output."
     }
 }
