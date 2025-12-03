@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { useI18n } from "@/components/i18n/i18n-provider";
 
 /**
@@ -9,6 +9,19 @@ import { useI18n } from "@/components/i18n/i18n-provider";
  */
 export const HeroSection: React.FC = () => {
   const { t } = useI18n();
+  const scriptCommand =
+    "bash <(curl -fsSL https://raw.githubusercontent.com/hophamlam/vps-benchmark/refs/heads/main/scripts/install.sh)";
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(scriptCommand);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      setCopied(false);
+    }
+  };
 
   return (
     <section className="border-b border-border bg-gradient-to-b from-background via-background to-muted/40">
@@ -30,25 +43,30 @@ export const HeroSection: React.FC = () => {
               {t("hero.subtitleEn")}
             </p>
           </div>
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
-            <button
-              type="button"
-              className="inline-flex items-center justify-center rounded-full bg-primary px-6 py-2.5 text-sm font-medium text-primary-foreground shadow-sm transition hover:shadow-md hover:shadow-primary/30"
-            >
-              {t("hero.ctaPrimary")}
-            </button>
-            <button
-              type="button"
-              className="text-xs font-medium text-primary underline-offset-4 hover:underline sm:text-sm"
-            >
-              {t("hero.ctaSecondary")}
-            </button>
+          <div className="space-y-3">
+            <p className="max-w-md text-xs text-muted-foreground md:text-sm">
+              {t("hero.ctaPrimaryNote")}
+              <br />
+              {t("hero.ctaPrimaryNoteEn")}
+            </p>
+            <div className="space-y-2 rounded-lg border border-dashed border-border bg-card/80 p-3 text-[11px] text-muted-foreground">
+              <div className="flex items-center justify-between gap-3">
+                <span className="text-[11px] uppercase tracking-wide">
+                  Run benchmark on your VPS
+                </span>
+                <button
+                  type="button"
+                  onClick={handleCopy}
+                  className="rounded-full bg-primary px-3 py-1 text-[11px] font-medium text-primary-foreground shadow-sm transition hover:opacity-90"
+                >
+                  {copied ? "Copied" : "Copy script"}
+                </button>
+              </div>
+              <pre className="whitespace-pre-wrap break-all font-mono">
+                <code>{scriptCommand}</code>
+              </pre>
+            </div>
           </div>
-          <p className="max-w-md text-xs text-muted-foreground md:text-sm">
-            {t("hero.ctaPrimaryNote")}
-            <br />
-            {t("hero.ctaPrimaryNoteEn")}
-          </p>
         </div>
 
         {/* Cột phải: cụm visual benchmark kiểu collage */}

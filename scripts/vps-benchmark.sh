@@ -19,8 +19,11 @@ PING_TARGETS=(
   "cloudflare.com"
 )
 
-# URL API mặc định để gửi báo cáo (sẽ được thay bằng domain production của bạn)
+# URL API mặc định để gửi báo cáo
 DEFAULT_REPORT_URL="https://vps-benchmark.hophamlam.com/api/benchmark/report"
+
+# Token mặc định để xác thực với API (server phải dùng cùng giá trị trong REPORT_TOKEN)
+DEFAULT_REPORT_TOKEN="dit-con-me-may-luon"
 
 # URL file dùng để đo tốc độ download (có thể thay bằng endpoint CDN của bạn)
 DOWNLOAD_URL_DEFAULT="https://speed.hetzner.de/100MB.bin"
@@ -136,7 +139,8 @@ send_report_if_configured() {
 
   # Ưu tiên REPORT_URL từ env (dev / override), nếu không thì dùng DEFAULT_REPORT_URL
   local report_url="${REPORT_URL:-$DEFAULT_REPORT_URL}"
-  local report_token="${REPORT_TOKEN:-}"
+  # Ưu tiên REPORT_TOKEN từ env (dev / override), nếu không thì dùng DEFAULT_REPORT_TOKEN
+  local report_token="${REPORT_TOKEN:-$DEFAULT_REPORT_TOKEN}"
 
   if [[ -z "$report_token" ]]; then
     echo
