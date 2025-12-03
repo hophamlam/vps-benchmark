@@ -63,25 +63,29 @@ You should see a summary like:
 - Download time + speed (Mbps).
 - A temporary combined score (0–10).
 
-### 2.2. Future `curl | bash` entrypoint
+### 2.2. `curl | bash` entrypoint (GitHub raw, early version)
 
-The long-term plan is to expose a single-line entrypoint similar to:
+There is an early installer script in `scripts/install.sh`.  
+With the public GitHub repo you can already run:
 
 ```bash
-bash <(curl -fsSL https://vps-benchmark-hophamlam.xyz/install)
+bash <(curl -fsSL https://raw.githubusercontent.com/hophamlam/vps-benchmark/refs/heads/main/scripts/install.sh)
 ```
 
 Where:
 
-- `install` will be a tiny shell script that:
-  - Downloads the latest CLI / benchmark script.
+- `install.sh` is a tiny shell script that:
+  - Downloads the latest `scripts/vps-benchmark.sh` from this repo.
   - Runs it.
-  - Cleans up temporary files.
-- The CLI will then be responsible for:
-  - Running richer benchmarks (network, I/O, etc.).
-  - Posting structured results back to the vps-benchmark-hophamlam API.
+  - Cleans up the temporary file.
+- The CLI currently:
+  - Only runs the **local-only** benchmark.
+  - Prints results to stdout.
 
-This is **not implemented yet**; for now, only the local script exists.
+In the future the CLI will also be responsible for:
+
+- Running richer benchmarks (network, I/O, etc.).
+- Posting structured results back to the vps-benchmark-hophamlam API.
 
 ---
 
@@ -96,4 +100,3 @@ This is **not implemented yet**; for now, only the local script exists.
   - Implement secure result submission to the web API.
 
 This project is in an **early exploration phase** and is expected to evolve quickly.
-
