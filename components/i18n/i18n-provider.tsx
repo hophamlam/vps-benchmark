@@ -19,7 +19,7 @@ type TranslationKey = Parameters<typeof getTranslation>[1];
 type I18nContextValue = {
   locale: Locale;
   setLocale: (locale: Locale) => void;
-  t: (key: TranslationKey) => string;
+  t: (key: TranslationKey | string) => string;
 };
 
 const I18nContext = createContext<I18nContextValue | undefined>(undefined);
@@ -69,10 +69,11 @@ export const I18nProvider: React.FC<{ children: ReactNode }> = ({
 
   /**
    * Hàm dịch key theo locale hiện tại
-   * @param key - key trong dictionary
+   * @param key - key trong dictionary (có thể là string động)
    * @returns chuỗi đã dịch
    */
-  const t = (key: TranslationKey): string => getTranslation(locale, key);
+  const t = (key: TranslationKey | string): string =>
+    getTranslation(locale, key as TranslationKey);
 
   return (
     <I18nContext.Provider value={{ locale, setLocale, t }}>

@@ -3,8 +3,10 @@ import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { LeaderboardSection } from "@/components/leaderboard/leaderboard-section";
 import { db } from "@/lib/db";
-
-type SortBy = "score" | "download" | "ping" | "date";
+import type {
+  BenchmarkRunSummary,
+  BenchmarkSortBy,
+} from "@/lib/types/benchmark";
 
 /**
  * Trang leaderboard hiển thị top benchmarks
@@ -17,14 +19,19 @@ export default async function LeaderboardPage({
   searchParams: Promise<{ sortBy?: string; page?: string }>;
 }) {
   const params = await searchParams;
-  const sortBy = (params.sortBy as SortBy) || "score";
+  const sortBy = (params.sortBy as BenchmarkSortBy) || "date";
   const page = parseInt(params.page || "1", 10);
   const pageSize = 50;
   const offset = (page - 1) * pageSize;
 
   // Validate sortBy
-  const validSortBy: SortBy[] = ["score", "download", "ping", "date"];
-  const finalSortBy = validSortBy.includes(sortBy) ? sortBy : "score";
+  const validSortBy: BenchmarkSortBy[] = [
+    "score",
+    "download",
+    "ping",
+    "date",
+  ];
+  const finalSortBy = validSortBy.includes(sortBy) ? sortBy : "date";
 
   // Query benchmarks với ORDER BY phù hợp
   type BenchmarkRow = {
@@ -134,7 +141,7 @@ export default async function LeaderboardPage({
     // rows, totalCount, totalPages sẽ là default values
   }
 
-  const items = rows.map((row) => ({
+  const items: BenchmarkRunSummary[] = rows.map((row) => ({
     id: row.id,
     createdAt: new Date(row.created_at).toISOString(),
     serverLabel: row.server_label,

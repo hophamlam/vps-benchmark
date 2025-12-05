@@ -4,6 +4,7 @@ import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { ResultDetailSection } from "@/components/result/result-detail-section";
 import { db } from "@/lib/db";
+import type { BenchmarkPayload } from "@/lib/types/benchmark";
 
 /**
  * Trang chi tiết một benchmark result
@@ -25,7 +26,7 @@ export default async function ResultDetailPage({
     avg_ping_ms: string | null;
     download_mbps: string | null;
     score: string | null;
-    raw_payload: unknown;
+    raw_payload: BenchmarkPayload;
   } | undefined;
 
   try {
@@ -51,7 +52,7 @@ export default async function ResultDetailPage({
       avg_ping_ms: string | null;
       download_mbps: string | null;
       score: string | null;
-      raw_payload: unknown;
+      raw_payload: BenchmarkPayload;
     }[];
     row = result;
   } catch (error) {

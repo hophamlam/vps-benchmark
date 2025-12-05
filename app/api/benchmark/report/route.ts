@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { db } from "@/lib/db";
+import type { BenchmarkPayload } from "@/lib/types/benchmark";
 
 const reportSchema = z.object({
   // Cho phép serverLabel là string hoặc null và có thể không gửi lên
@@ -8,7 +9,17 @@ const reportSchema = z.object({
   avgPingMs: z.number().nonnegative().optional(),
   downloadMbps: z.number().nonnegative().optional(),
   score: z.number().min(0).max(10).optional(),
-  payload: z.unknown(), // lưu thô vào raw_payload
+  payload: z
+    .object({
+      pingTargets: z.array(z.string()),
+      avgPingMs: z.number().nonnegative(),
+      download: z.object({
+        url: z.string().url(),
+        timeSeconds: z.number().nonnegative(),
+        speedMbps: z.number().nonnegative(),
+      }),
+    })
+    .catchall(z.unknown()) as z.ZodType<BenchmarkPayload>, // lưu thô vào raw_payload với type an toàn
 });
 
 /**

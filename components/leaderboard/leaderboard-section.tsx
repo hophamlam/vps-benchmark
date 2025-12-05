@@ -3,21 +3,15 @@
 import React from "react";
 import Link from "next/link";
 import { useI18n } from "@/components/i18n/i18n-provider";
-
-type BenchmarkItem = {
-  id: string;
-  createdAt: string;
-  serverLabel: string | null;
-  avgPingMs: number | null;
-  downloadMbps: number | null;
-  score: number | null;
-};
-
-type SortBy = "score" | "download" | "ping" | "date";
+import { BenchmarkTableRow } from "@/components/benchmark/benchmark-table-row";
+import type {
+  BenchmarkRunSummary,
+  BenchmarkSortBy,
+} from "@/lib/types/benchmark";
 
 type LeaderboardSectionProps = {
-  items: BenchmarkItem[];
-  sortBy: SortBy;
+  items: BenchmarkRunSummary[];
+  sortBy: BenchmarkSortBy;
   currentPage: number;
   totalPages: number;
   totalCount: number;
@@ -41,18 +35,7 @@ export const LeaderboardSection: React.FC<LeaderboardSectionProps> = ({
 }) => {
   const { t } = useI18n();
 
-  const formatDate = (isoString: string) => {
-    const date = new Date(isoString);
-    return date.toLocaleString(undefined, {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-    });
-  };
-
-  const buildSortUrl = (newSortBy: SortBy) => {
+  const buildSortUrl = (newSortBy: BenchmarkSortBy) => {
     const params = new URLSearchParams();
     params.set("sortBy", newSortBy);
     if (currentPage > 1) {
@@ -87,19 +70,21 @@ export const LeaderboardSection: React.FC<LeaderboardSectionProps> = ({
           {t("leaderboard.sortBy")}:
         </span>
         <div className="flex flex-wrap gap-2">
-          {(["score", "download", "ping", "date"] as SortBy[]).map((option) => (
-            <Link
-              key={option}
-              href={buildSortUrl(option)}
-              className={`rounded-full px-3 py-1.5 text-xs font-medium transition ${
-                sortBy === option
-                  ? "bg-primary text-primary-foreground"
-                  : "bg-muted text-muted-foreground hover:bg-muted/80"
-              }`}
-            >
-              {t(`leaderboard.sort.${option}`)}
-            </Link>
-          ))}
+          {(["score", "download", "ping", "date"] as BenchmarkSortBy[]).map(
+            (option) => (
+              <Link
+                key={option}
+                href={buildSortUrl(option)}
+                className={`rounded-full px-3 py-1.5 text-xs font-medium transition ${
+                  sortBy === option
+                    ? "bg-primary text-primary-foreground"
+                    : "bg-muted text-muted-foreground hover:bg-muted/80"
+                }`}
+              >
+                {t(`leaderboard.sort.${option}`)}
+              </Link>
+            )
+          )}
         </div>
       </div>
 
@@ -126,12 +111,13 @@ export const LeaderboardSection: React.FC<LeaderboardSectionProps> = ({
               <th className="px-4 py-3 text-right text-xs uppercase tracking-wide text-muted-foreground">
                 {t("leaderboard.table.score")}
               </th>
+              <th className="px-3 py-3 text-right text-xs uppercase tracking-wide text-muted-foreground"></th>
             </tr>
           </thead>
           <tbody>
             {items.length === 0 ? (
               <tr>
-                <td colSpan={6} className="px-4 py-16">
+                <td colSpan={8} className="px-4 py-16">
                   <div className="flex flex-col items-center justify-center space-y-2 text-center">
                     <p className="text-sm font-medium text-muted-foreground">
                       {t("leaderboard.empty")}
@@ -146,38 +132,15 @@ export const LeaderboardSection: React.FC<LeaderboardSectionProps> = ({
               items.map((item, index) => {
                 const rank = (currentPage - 1) * 50 + index + 1;
                 return (
-                  <tr
+                  <BenchmarkTableRow
                     key={item.id}
-                    className="border-t border-border/60 hover:bg-muted/30 transition-colors"
-                  >
-                    <td className="px-4 py-3 text-left text-xs font-medium text-muted-foreground">
-                      {rank}
-                    </td>
-                    <td className="px-4 py-3 text-left text-xs text-muted-foreground">
-                      {formatDate(item.createdAt)}
-                    </td>
-                    <td className="px-4 py-3 text-left">
-                      <Link
-                        href={`/result/${item.id}`}
-                        className="text-xs hover:text-primary hover:underline"
-                      >
-                        {item.serverLabel || "—"}
-                      </Link>
-                    </td>
-                    <td className="px-4 py-3 text-right text-xs">
-                      {item.avgPingMs !== null
-                        ? `${item.avgPingMs.toFixed(2)} ms`
-                        : "—"}
-                    </td>
-                    <td className="px-4 py-3 text-right text-xs">
-                      {item.downloadMbps !== null
-                        ? `${item.downloadMbps.toFixed(2)} Mbps`
-                        : "—"}
-                    </td>
-                    <td className="px-4 py-3 text-right text-xs font-semibold text-primary">
-                      {item.score !== null ? item.score.toFixed(2) : "—"}
-                    </td>
-                  </tr>
+                    item={item}
+                    showRank={true}
+                    rank={rank}
+                    showAbsoluteTime={true}
+                    showViewButton={true}
+                    textSize="xs"
+                  />
                 );
               })
             )}
@@ -217,4 +180,3 @@ export const LeaderboardSection: React.FC<LeaderboardSectionProps> = ({
     </section>
   );
 };
-

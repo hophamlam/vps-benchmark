@@ -1,112 +1,45 @@
 import type { Locale } from "./config";
 
-type TranslationKeys =
-  | "header.brand"
-  | "header.nav.about"
-  | "header.nav.howItWorks"
-  | "header.nav.leaderboard"
-  | "header.locale.vi"
-  | "header.locale.en"
-  | "hero.title"
-  | "hero.subtitle"
-  | "hero.ctaPrimary"
-  | "hero.ctaSecondary"
-  | "hero.ctaPrimaryNote"
-  | "hero.scriptLabel"
-  | "hero.copyButton"
-  | "hero.copiedButton"
-  | "banner.goal.title"
-  | "banner.goal.item1"
-  | "banner.goal.item2"
-  | "banner.goal.item3"
-  | "banner.howItWorks.title"
-  | "banner.howItWorks.step1.title"
-  | "banner.howItWorks.step1.body"
-  | "banner.howItWorks.step2.title"
-  | "banner.howItWorks.step2.body"
-  | "banner.howItWorks.step3.title"
-  | "banner.howItWorks.step3.body"
-  | "banner.demo.title"
-  | "banner.demo.note"
-  | "footer.note"
-  | "latestBenchmarks.title"
-  | "latestBenchmarks.description"
-  | "latestBenchmarks.table.time"
-  | "latestBenchmarks.table.label"
-  | "latestBenchmarks.table.ping"
-  | "latestBenchmarks.table.download"
-  | "latestBenchmarks.table.score"
-  | "latestBenchmarks.empty"
-  | "latestBenchmarks.emptyDescription"
-  | "stats.subtitle"
-  | "stats.totalRuns"
-  | "stats.avgScore"
-  | "stats.avgDownload"
-  | "leaderboard.title"
-  | "leaderboard.description"
-  | "leaderboard.sortBy"
-  | "leaderboard.sort.score"
-  | "leaderboard.sort.download"
-  | "leaderboard.sort.ping"
-  | "leaderboard.sort.date"
-  | "leaderboard.table.time"
-  | "leaderboard.table.label"
-  | "leaderboard.table.ping"
-  | "leaderboard.table.download"
-  | "leaderboard.table.score"
-  | "leaderboard.empty"
-  | "leaderboard.emptyDescription"
-  | "leaderboard.pagination.showing"
-  | "leaderboard.pagination.previous"
-  | "leaderboard.pagination.next"
-  | "result.title"
-  | "result.description"
-  | "result.backToLeaderboard"
-  | "result.summary.title"
-  | "result.summary.time"
-  | "result.summary.serverLabel"
-  | "result.summary.avgPing"
-  | "result.summary.downloadSpeed"
-  | "result.summary.score"
-  | "result.summary.sourceIp"
-  | "result.rawPayload.title"
-  | "result.rawPayload.description"
-  | "error.notFound.title"
-  | "error.notFound.description"
-  | "error.notFound.backHome"
-  | "error.notFound.viewLeaderboard"
-  | "error.generic.title"
-  | "error.generic.description"
-  | "error.generic.retry"
-  | "error.generic.backHome";
-
-type TranslationDict = Record<TranslationKeys, string>;
-
-export const translations: Record<Locale, TranslationDict> = {
+export const translations = {
   vi: {
-    "header.brand": "VPS Benchmark by hophamlam",
+    "header.brand": "tocdovps.dev",
     "header.nav.about": "Trang chủ",
     "header.nav.howItWorks": "Cách hoạt động",
     "header.nav.leaderboard": "Bảng xếp hạng",
     "header.locale.vi": "VI",
     "header.locale.en": "EN",
-    "hero.title": "Đánh giá hiệu năng VPS một cách minh bạch",
+    "hero.title": "Đánh giá tốc độ VPS một cách minh bạch",
     "hero.subtitle":
-      "vps-benchmark-hophamlam là dự án cá nhân giúp bạn nhìn rõ hiệu năng thực tế của các gói VPS: độ trễ, tốc độ mạng, I/O… được kiểm tra và trình bày một cách dễ hiểu.",
+      "tocdovps.dev là dự án cá nhân giúp bạn nhìn rõ hiệu năng thực tế của các gói VPS: độ trễ, tốc độ mạng, I/O… được kiểm tra và trình bày một cách dễ hiểu.",
     "hero.ctaPrimary": "Khám phá benchmark (Coming soon)",
-    "hero.ctaSecondary": "Tìm hiểu cách mình benchmark",
-    "hero.ctaPrimaryNote":
-      "Hiện tại chỉ là bản giới thiệu giao diện – tính năng benchmark sẽ được mở sau.",
+    "hero.ctaSecondary": "Xem kết quả benchmark mới nhất",
+    "hero.ctaPrimaryNote": "Bắt đầu benchmark VPS của bạn với tocdovps.dev.",
     "hero.scriptLabel": "Chạy benchmark trên VPS của bạn",
     "hero.copyButton": "Sao chép script",
     "hero.copiedButton": "Đã sao chép",
-    "banner.goal.title": "Mục tiêu của vps-benchmark-hophamlam",
-    "banner.goal.item1":
-      "Cung cấp góc nhìn trung lập về hiệu năng VPS từ nhiều nhà cung cấp khác nhau.",
-    "banner.goal.item2": "Dùng các bài test đơn giản, dễ hiểu, có thể lặp lại.",
-    "banner.goal.item3":
-      "Chia sẻ kết quả công khai, minh bạch, không quảng cáo trá hình.",
-    "banner.howItWorks.title": "Cách benchmark sẽ hoạt động (dự kiến)",
+    "hero.benchmarkCount": "Tổng số benchmark: {count}",
+    "features.title": "Tính năng",
+    "features.landingPage.title": "Landing page",
+    "features.landingPage.description":
+      "Trang chủ giới thiệu dự án và hướng dẫn sử dụng.",
+    "features.leaderboard.title": "Bảng tổng hợp kết quả benchmark",
+    "features.leaderboard.description":
+      "Xem chi tiết các kết quả benchmark với sorting và pagination.",
+    "features.auth.title": "Xác thực người dùng",
+    "features.auth.description":
+      "Đăng nhập với credentials, Google, GitHub (đang phát triển).",
+    "features.customScript.title": "Script cá nhân hóa",
+    "features.customScript.description":
+      "Đa dạng lựa chọn speedtest, phần cứng (đang phát triển).",
+    "features.notifications.title": "Thông báo tự động",
+    "features.notifications.description":
+      "Gửi kết quả về Telegram, Discord, Email (đang phát triển).",
+    "features.compare.title": "So sánh VPS",
+    "features.compare.description":
+      "So sánh hiệu năng giữa các VPS khác nhau (đang phát triển).",
+    "features.badge.available": "Có sẵn",
+    "features.badge.comingSoon": "Sắp ra mắt",
+    "banner.howItWorks.title": "Cách hoạt động",
     "banner.howItWorks.step1.title": "Bước 1 – Thu thập thông tin",
     "banner.howItWorks.step1.body":
       "Chọn gói VPS, nhà cung cấp và khu vực test.",
@@ -121,6 +54,13 @@ export const translations: Record<Locale, TranslationDict> = {
       "Đây là dữ liệu demo cho phần giao diện, chưa phải kết quả test thật.",
     "footer.note":
       "Dự án cá nhân, đang trong giai đoạn phát triển tính năng benchmark thực tế.",
+    "footer.links.title": "Liên kết",
+    "footer.links.home": "Trang chủ",
+    "footer.links.leaderboard": "Bảng xếp hạng",
+    "footer.links.howItWorks": "Cách hoạt động",
+    "footer.social.title": "Liên hệ",
+    "footer.social.website": "hophamlam.com",
+    "footer.copyright": "© {year} tocdovps.dev. Dự án mã nguồn mở.",
     "latestBenchmarks.title": "Kết quả benchmark mới nhất",
     "latestBenchmarks.description":
       "Một số lần chạy gần đây được báo cáo từ script CLI.",
@@ -183,7 +123,7 @@ export const translations: Record<Locale, TranslationDict> = {
     "error.generic.backHome": "Về trang chủ",
   },
   en: {
-    "header.brand": "VPS Benchmark by hophamlam",
+    "header.brand": "tocdovps.dev",
     "header.nav.about": "Home",
     "header.nav.howItWorks": "How it works",
     "header.nav.leaderboard": "Leaderboard",
@@ -191,22 +131,36 @@ export const translations: Record<Locale, TranslationDict> = {
     "header.locale.en": "EN",
     "hero.title": "Transparent VPS performance benchmarking",
     "hero.subtitle":
-      "vps-benchmark-hophamlam is a personal project to reveal the real-world performance of VPS plans – latency, network throughput, disk I/O – presented in a clear and honest way.",
+      "tocdovps.dev is a personal project to reveal the real-world performance of VPS plans – latency, network throughput, disk I/O – presented in a clear and honest way.",
     "hero.ctaPrimary": "Explore benchmarks (Coming soon)",
-    "hero.ctaSecondary": "See how I benchmark",
-    "hero.ctaPrimaryNote":
-      "UI preview only for now – real benchmarking features are coming soon.",
+    "hero.ctaSecondary": "View latest benchmarks",
+    "hero.ctaPrimaryNote": "Start benchmarking your VPS with tocdovps.dev.",
     "hero.scriptLabel": "Run benchmark on your VPS",
     "hero.copyButton": "Copy script",
     "hero.copiedButton": "Copied",
-    "banner.goal.title": "The goal of vps-benchmark-hophamlam",
-    "banner.goal.item1":
-      "Provide a neutral view on VPS performance across different providers.",
-    "banner.goal.item2":
-      "Use simple, repeatable tests that are easy to understand.",
-    "banner.goal.item3":
-      "Share results publicly and transparently, with no hidden sponsorship.",
-    "banner.howItWorks.title": "How the benchmarking will work (planned)",
+    "hero.benchmarkCount": "Total benchmarks: {count}",
+    "features.title": "Features",
+    "features.landingPage.title": "Landing page",
+    "features.landingPage.description":
+      "Homepage introducing the project and usage guide.",
+    "features.leaderboard.title": "Benchmark results leaderboard",
+    "features.leaderboard.description":
+      "View detailed benchmark results with sorting and pagination.",
+    "features.auth.title": "User authentication",
+    "features.auth.description":
+      "Sign in with credentials, Google, GitHub (coming soon).",
+    "features.customScript.title": "Customizable script",
+    "features.customScript.description":
+      "Multiple speedtest and hardware options (coming soon).",
+    "features.notifications.title": "Automatic notifications",
+    "features.notifications.description":
+      "Send results to Telegram, Discord, Email (coming soon).",
+    "features.compare.title": "VPS comparison",
+    "features.compare.description":
+      "Compare performance between different VPS (coming soon).",
+    "features.badge.available": "Available",
+    "features.badge.comingSoon": "Coming soon",
+    "banner.howItWorks.title": "How it works",
     "banner.howItWorks.step1.title": "Step 1 – Collect information",
     "banner.howItWorks.step1.body":
       "Select the VPS plan, provider, and test region.",
@@ -221,6 +175,13 @@ export const translations: Record<Locale, TranslationDict> = {
       "This is demo data for the UI only, not real benchmark results yet.",
     "footer.note":
       "Personal project, real benchmarking features are under active development.",
+    "footer.links.title": "Links",
+    "footer.links.home": "Home",
+    "footer.links.leaderboard": "Leaderboard",
+    "footer.links.howItWorks": "How it works",
+    "footer.social.title": "Connect",
+    "footer.social.website": "hophamlam.com",
+    "footer.copyright": "© {year} tocdovps.dev. Open source project.",
     "latestBenchmarks.title": "Latest benchmarks",
     "latestBenchmarks.description":
       "A few of the most recent runs reported by the CLI script.",
@@ -281,7 +242,9 @@ export const translations: Record<Locale, TranslationDict> = {
     "error.generic.retry": "Try Again",
     "error.generic.backHome": "Back to Home",
   },
-};
+} as const satisfies Record<Locale, Record<string, string>>;
+
+export type TranslationKeys = keyof (typeof translations)[Locale];
 
 export function getTranslation(locale: Locale, key: TranslationKeys): string {
   return translations[locale][key] ?? translations.vi[key] ?? key;

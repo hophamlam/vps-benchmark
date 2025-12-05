@@ -1,6 +1,6 @@
-## vps-benchmark-hophamlam
+## tocdovps.dev
 
-Landing page + experimental VPS benchmark tooling by **hophamlam**.
+Landing page + experimental VPS benchmark tooling for **tocdovps.dev** by **hophamlam**.
 
 - Frontend: [Next.js](https://nextjs.org) App Router, Tailwind CSS, custom theme generated via [tweakcn](https://tweakcn.com/editor/theme?tab=other) for shadcn-style tokens.
 - i18n: simple VI/EN dictionary with a small `I18nProvider`.
@@ -85,7 +85,7 @@ Where:
 In the future the CLI will also be responsible for:
 
 - Running richer benchmarks (network, I/O, etc.).
-- Posting structured results back to the vps-benchmark-hophamlam API.
+- Posting structured results back to the tocdovps.dev API.
 
 ---
 

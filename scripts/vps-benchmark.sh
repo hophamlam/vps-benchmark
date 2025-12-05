@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 ##
-## Script benchmark VPS đơn giản (v1 – local only, chưa gửi API)
+## Script benchmark VPS đơn giản cho tocdovps.dev (v1 – local only)
 ## - Đo ping tới một số host cố định
 ## - Đo tốc độ download HTTP từ một file public
 ## - In kết quả dạng summary bằng tiếng Anh
@@ -19,7 +19,7 @@ PING_TARGETS=(
   "cloudflare.com"
 )
 
-# URL API mặc định để gửi báo cáo
+# URL API mặc định để gửi báo cáo về tocdovps.dev
 DEFAULT_REPORT_URL="https://www.tocdovps.dev/api/benchmark/report"
 
 # Token mặc định để xác thực với API (server phải dùng cùng giá trị trong REPORT_TOKEN)
@@ -168,13 +168,13 @@ send_report_if_configured() {
 }
 
 ###
-### Hàm main: chạy toàn bộ benchmark local và (nếu cấu hình) gửi report tới API
+### Hàm main: chạy toàn bộ benchmark local và (nếu cấu hình) gửi report tới API của tocdovps.dev
 ### @returns 0 luôn, để tránh làm fail CI nếu dùng sau này
 ###
 main() {
-  print_heading "vps-benchmark-hophamlam (local benchmark v1)"
+  print_heading "tocdovps.dev (local benchmark v1)"
   echo "This script runs a very simple, local benchmark."
-  echo "Optionally, it can POST a JSON report to vps-benchmark-hophamlam if configured."
+  echo "Optionally, it can POST a JSON report to tocdovps.dev if configured."
   echo
 
   # Kiểm tra command cần thiết
@@ -239,8 +239,8 @@ main() {
   printf "Overall score (0-10): %s\n" "$score"
 
   echo
-  echo "Note: This is a very early benchmark script."
-  echo "      You can choose to share this result with vps-benchmark-hophamlam."
+  echo "Note: This is a very early benchmark script for tocdovps.dev."
+  echo "      You can choose to share this result with tocdovps.dev."
 
   # Chuẩn bị JSON payload để gửi lên API (đơn giản, không cần jq)
   # Lưu ý: không escape đặc biệt vì các field hiện tại đều là số/chuỗi đơn giản.
@@ -265,7 +265,7 @@ EOF
 )
 
   echo
-  read -r -p "Share this result with vps-benchmark-hophamlam (y/N)? " answer
+  read -r -p "Share this result with tocdovps.dev (y/N)? " answer
   case "$answer" in
     [Yy]*)
       send_report_if_configured "$json_payload"

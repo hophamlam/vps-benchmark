@@ -2,9 +2,11 @@
 
 import React from "react";
 import Link from "next/link";
+import { MoonIcon, SunIcon } from "lucide-react";
 import { useI18n } from "@/components/i18n/i18n-provider";
 import type { Locale } from "@/lib/i18n/config";
 import { useTheme } from "@/components/theme/theme-provider";
+import { Toggle } from "@/components/ui/toggle";
 
 /**
  * Component Header hiển thị brand, menu đơn giản,
@@ -16,32 +18,31 @@ export const Header: React.FC = () => {
   const { theme, setTheme } = useTheme();
 
   /**
-   * Xử lý đổi ngôn ngữ giữa VI/EN
-   * @param nextLocale - locale được chọn
+   * Toggle language giữa VI/EN
    */
-  const handleLocaleChange = (nextLocale: Locale) => {
-    if (nextLocale === locale) return;
-    setLocale(nextLocale);
+  const handleToggleLanguage = () => {
+    setLocale(locale === "vi" ? "en" : "vi");
   };
 
   /**
    * Toggle theme giữa light/dark
+   * @param pressed - trạng thái pressed từ Toggle component
    */
-  const handleToggleTheme = () => {
-    setTheme(theme === "light" ? "dark" : "light");
+  const handleToggleTheme = (pressed: boolean) => {
+    setTheme(pressed ? "dark" : "light");
   };
 
   return (
     <header className="sticky top-0 z-20 border-b border-border bg-background/80 backdrop-blur">
       <div className="mx-auto flex h-14 max-w-5xl items-center justify-between px-4">
-        <div className="flex flex-col">
+        <Link href="/" className="flex flex-col">
           <span className="text-sm font-semibold tracking-tight">
             {t("header.brand")}
           </span>
           <span className="text-xs text-muted-foreground">
             VPS benchmark landing (UI preview)
           </span>
-        </div>
+        </Link>
         <div className="flex items-center gap-3">
           <nav className="hidden items-center gap-4 text-xs sm:flex">
             <Link
@@ -57,43 +58,48 @@ export const Header: React.FC = () => {
               {t("header.nav.leaderboard")}
             </Link>
           </nav>
-          <button
-            type="button"
-            onClick={handleToggleTheme}
-            className="flex h-7 w-7 items-center justify-center rounded-full border border-border bg-card text-xs"
-            aria-label="Toggle color theme"
+          <Toggle
+            aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
+            className="rounded-full group size-6 data-[state=on]:bg-transparent data-[state=on]:hover:bg-muted"
+            onPressedChange={handleToggleTheme}
+            pressed={theme === "dark"}
+            variant="outline"
           >
-            {theme === "light" ? "🌙" : "☀️"}
-          </button>
-          <div className="flex items-center gap-1 rounded-full border border-border bg-card px-1 py-0.5 text-xs">
-            <button
-              type="button"
-              onClick={() => handleLocaleChange("vi")}
-              className={`rounded-full px-2 py-0.5 ${
-                locale === "vi"
-                  ? "bg-primary text-primary-foreground"
-                  : "text-muted-foreground hover:text-foreground"
-              }`}
-            >
-              {t("header.locale.vi")}
-            </button>
-            <button
-              type="button"
-              onClick={() => handleLocaleChange("en")}
-              className={`rounded-full px-2 py-0.5 ${
-                locale === "en"
-                  ? "bg-primary text-primary-foreground"
-                  : "text-muted-foreground hover:text-foreground"
-              }`}
+            <MoonIcon
+              aria-hidden="true"
+              className="absolute shrink-0 scale-0 opacity-0 transition-all group-data-[state=on]:scale-90 group-data-[state=on]:opacity-100"
+              size={16}
+            />
+            <SunIcon
+              aria-hidden="true"
+              className="shrink-0 scale-90 opacity-100 transition-all group-data-[state=on]:scale-0 group-data-[state=on]:opacity-0"
+              size={16}
+            />
+          </Toggle>
+          <Toggle
+            aria-label={`Switch to ${
+              locale === "vi" ? "English" : "Vietnamese"
+            }`}
+            className="group size-6 rounded-full data-[state=on]:bg-transparent data-[state=on]:hover:bg-muted"
+            onPressedChange={handleToggleLanguage}
+            pressed={locale === "en"}
+            variant="outline"
+          >
+            <span
+              aria-hidden="true"
+              className="absolute shrink-0 scale-0 opacity-0 text-xs font-medium transition-all group-data-[state=on]:scale-100 group-data-[state=on]:opacity-100"
             >
               {t("header.locale.en")}
-            </button>
-          </div>
+            </span>
+            <span
+              aria-hidden="true"
+              className="shrink-0 scale-100 opacity-100 text-xs font-medium transition-all group-data-[state=on]:scale-0 group-data-[state=on]:opacity-0"
+            >
+              {t("header.locale.vi")}
+            </span>
+          </Toggle>
         </div>
       </div>
     </header>
   );
 };
-
-
-

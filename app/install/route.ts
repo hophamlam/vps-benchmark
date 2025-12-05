@@ -5,7 +5,7 @@ import { resolve } from "path";
 export const runtime = "nodejs";
 
 /**
- * Endpoint phục vụ shell script cài đặt vps-benchmark-hophamlam
+ * Endpoint phục vụ shell script cài đặt tocdovps.dev
  * Tương tự phong cách https://get.docker.com/
  *
  * @param _req - NextRequest (không dùng, nhưng giữ để sau này có thể log)

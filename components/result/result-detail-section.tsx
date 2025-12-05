@@ -3,6 +3,9 @@
 import React from "react";
 import Link from "next/link";
 import { useI18n } from "@/components/i18n/i18n-provider";
+import { TimeAgo } from "@/components/ui/time-ago";
+import { formatLocalDateTime } from "@/lib/utils/time-ago";
+import type { BenchmarkPayload } from "@/lib/types/benchmark";
 
 type ResultDetail = {
   id: string;
@@ -12,7 +15,7 @@ type ResultDetail = {
   avgPingMs: number | null;
   downloadMbps: number | null;
   score: number | null;
-  rawPayload: unknown;
+  rawPayload: BenchmarkPayload;
 };
 
 type ResultDetailSectionProps = {
@@ -29,21 +32,8 @@ export const ResultDetailSection: React.FC<ResultDetailSectionProps> = ({
 }) => {
   const { t } = useI18n();
 
-  const formatDate = (isoString: string) => {
-    const date = new Date(isoString);
-    return date.toLocaleString(undefined, {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-      second: "2-digit",
-      timeZoneName: "short",
-    });
-  };
-
   return (
-    <section className="mx-auto max-w-4xl px-4 py-12 md:py-16">
+    <section className="mx-auto max-w-6xl px-4 py-12 md:py-16">
       {/* Header */}
       <div className="mb-8 space-y-2">
         <div className="flex items-center gap-3">
@@ -72,7 +62,12 @@ export const ResultDetailSection: React.FC<ResultDetailSectionProps> = ({
             <span className="text-xs font-medium text-muted-foreground">
               {t("result.summary.time")}
             </span>
-            <p className="mt-1 text-sm">{formatDate(result.createdAt)}</p>
+            <p className="mt-1 text-sm">
+              {formatLocalDateTime(result.createdAt)}
+            </p>
+            <p className="mt-0.5 text-xs text-muted-foreground">
+              <TimeAgo date={result.createdAt} />
+            </p>
           </div>
           {result.serverLabel && (
             <div>

@@ -1,16 +1,28 @@
 "use client";
 
 import React, { useState } from "react";
+import Link from "next/link";
 import { useI18n } from "@/components/i18n/i18n-provider";
+import {
+  AnimatedSpan,
+  Terminal,
+  TypingAnimation,
+} from "@/components/ui/terminal";
+
+type HeroSectionProps = {
+  totalBenchmarks?: number;
+};
 
 /**
  * Hero section chính của landing page theo phong cách SaaS kiểu Framer
+ * @param totalBenchmarks - tổng số lần benchmark (optional)
  * @returns Phần hero với title, mô tả, CTA và cụm visual benchmark
  */
-export const HeroSection: React.FC = () => {
+export const HeroSection: React.FC<HeroSectionProps> = ({
+  totalBenchmarks = 0,
+}) => {
   const { t } = useI18n();
-  const scriptCommand =
-    "bash <(curl -fsSL https://tocdovps.dev/install)";
+  const scriptCommand = "bash <(curl -fsSL https://tocdovps.dev/install)";
   const [copied, setCopied] = useState(false);
 
   const handleCopy = async () => {
@@ -30,7 +42,14 @@ export const HeroSection: React.FC = () => {
         <div className="flex-1 space-y-8">
           <div className="inline-flex items-center gap-2 rounded-full border border-border bg-card/70 px-3 py-1 text-xs text-muted-foreground shadow-sm backdrop-blur">
             <span className="h-1.5 w-1.5 rounded-full bg-primary" />
-            <span>vps-benchmark-hophamlam • Early preview</span>
+            <span>
+              {totalBenchmarks > 0
+                ? t("hero.benchmarkCount").replace(
+                    "{count}",
+                    totalBenchmarks.toLocaleString()
+                  )
+                : "tocdovps.dev • Early preview"}
+            </span>
           </div>
           <div className="space-y-4">
             <h1 className="text-balance text-4xl font-semibold tracking-tight md:text-5xl">
@@ -44,119 +63,96 @@ export const HeroSection: React.FC = () => {
             <p className="max-w-md text-xs text-muted-foreground md:text-sm">
               {t("hero.ctaPrimaryNote")}
             </p>
-            <div className="space-y-2 rounded-lg border border-dashed border-border bg-card/80 p-3 text-[11px] text-muted-foreground">
-              <div className="flex items-center justify-between gap-3">
-                <span className="text-[11px] uppercase tracking-wide">
-                  {t("hero.scriptLabel")}
+            <div className="flex flex-col gap-2 sm:flex-row">
+              <button
+                type="button"
+                onClick={handleCopy}
+                className="inline-flex items-center justify-center gap-2 rounded-md bg-primary px-4 py-2 text-xs font-medium text-primary-foreground shadow-sm transition hover:bg-primary/90"
+              >
+                <span className="truncate font-mono">{scriptCommand}</span>
+                <span className="inline-flex h-5 w-5 items-center justify-center rounded-full bg-primary-foreground/10">
+                  {copied ? (
+                    <svg
+                      aria-hidden="true"
+                      viewBox="0 0 16 16"
+                      className="h-3 w-3"
+                    >
+                      <path
+                        fill="currentColor"
+                        d="M6.00016 10.8002L3.20016 8.00016L2.26683 8.9335L6.00016 12.6668L14.0002 4.66683L13.0668 3.7335L6.00016 10.8002Z"
+                      />
+                    </svg>
+                  ) : (
+                    <svg
+                      aria-hidden="true"
+                      viewBox="0 0 16 16"
+                      className="h-3 w-3"
+                    >
+                      <path
+                        fill="currentColor"
+                        d="M4 1h9v11H4V1Zm1 1v9h7V2H5Zm-3 3h1v9h8v1H2V5Z"
+                      />
+                    </svg>
+                  )}
                 </span>
-                <button
-                  type="button"
-                  onClick={handleCopy}
-                  className="rounded-full bg-primary px-3 py-1 text-[11px] font-medium text-primary-foreground shadow-sm transition hover:opacity-90"
-                >
-                  {copied ? t("hero.copiedButton") : t("hero.copyButton")}
-                </button>
-              </div>
-              <pre className="whitespace-pre-wrap break-all font-mono">
-                <code>{scriptCommand}</code>
-              </pre>
+              </button>
+              <Link
+                href="/leaderboard"
+                className="inline-flex items-center justify-center gap-2 rounded-md border border-border bg-background px-4 py-2 text-xs font-medium shadow-sm transition hover:bg-muted"
+              >
+                {t("hero.ctaSecondary")}
+              </Link>
             </div>
           </div>
         </div>
 
-        {/* Cột phải: cụm visual benchmark kiểu collage */}
+        {/* Cột phải: Terminal demo script benchmark */}
         <div className="flex-1">
           <div className="relative flex justify-end">
             <div className="pointer-events-none absolute -inset-6 -z-10 rounded-[2rem] bg-[radial-gradient(circle_at_top,_var(--color-primary)/0.25,_transparent_55%),radial-gradient(circle_at_bottom,_var(--color-accent)/0.18,_transparent_55%)] opacity-80" />
 
-            <div className="flex w-full max-w-md flex-col gap-4">
-              {/* Card leaderboard chính */}
-              <div className="rounded-2xl border border-border/80 bg-card/90 p-4 shadow-lg backdrop-blur">
-                <div className="mb-3 flex items-center justify-between">
-                  <span className="text-xs font-medium text-muted-foreground">
-                    Demo VPS leaderboard
-                  </span>
-                  <span className="rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-medium text-primary">
-                    UI preview
-                  </span>
-                </div>
-                <div className="overflow-hidden rounded-xl border border-border/80 bg-background/95 text-xs">
-                  <div className="grid grid-cols-5 border-b border-border/70 bg-muted/60 px-3 py-2 font-medium">
-                    <span>VPS</span>
-                    <span className="text-center">Location</span>
-                    <span className="text-center">Ping</span>
-                    <span className="text-center">Down</span>
-                    <span className="text-center">Score</span>
-                  </div>
-                  {[
-                    {
-                      name: "VPS A",
-                      location: "SG",
-                      ping: "12 ms",
-                      download: "920 Mbps",
-                      score: "9.3",
-                    },
-                    {
-                      name: "VPS B",
-                      location: "Tokyo",
-                      ping: "18 ms",
-                      download: "750 Mbps",
-                      score: "8.7",
-                    },
-                    {
-                      name: "VPS C",
-                      location: "US",
-                      ping: "180 ms",
-                      download: "650 Mbps",
-                      score: "7.4",
-                    },
-                  ].map((row) => (
-                    <div
-                      key={row.name}
-                      className="grid grid-cols-5 border-t border-border/60 px-3 py-2"
-                    >
-                      <span className="truncate">{row.name}</span>
-                      <span className="text-center">{row.location}</span>
-                      <span className="text-center">{row.ping}</span>
-                      <span className="text-center">{row.download}</span>
-                      <span className="text-center font-semibold text-primary">
-                        {row.score}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              </div>
+            <div className="w-full max-w-md">
+              <Terminal className="max-h-[320px] shadow-lg">
+                <TypingAnimation>
+                  $ bash &lt;(curl -fsSL https://tocdovps.dev/install)
+                </TypingAnimation>
 
-              {/* Hai card phụ xếp lệch kiểu Framer */}
-              <div className="flex gap-4">
-                <div className="flex-1 rounded-2xl border border-border/60 bg-card/95 p-3 text-[11px] shadow-md backdrop-blur">
-                  <div className="mb-2 flex items-center justify-between">
-                    <span className="font-medium">Network latency</span>
-                    <span className="rounded-full bg-primary/10 px-2 py-0.5 text-[10px] text-primary">
-                      ms
-                    </span>
-                  </div>
-                  <p className="text-muted-foreground">
-                    Low ping from VN → SG, JP, US for common VPS locations.
-                  </p>
-                </div>
-                <div className="flex-1 rounded-2xl border border-border/60 bg-card/95 p-3 text-[11px] shadow-md backdrop-blur">
-                  <div className="mb-2 flex items-center justify-between">
-                    <span className="font-medium">Disk I/O (planned)</span>
-                    <span className="rounded-full bg-accent/10 px-2 py-0.5 text-[10px] text-accent-foreground">
-                      coming soon
-                    </span>
-                  </div>
-                  <p className="text-muted-foreground">
-                    Simple, repeatable tests for real-world VPS workloads.
-                  </p>
-                </div>
-              </div>
+                <AnimatedSpan className="text-green-500">
+                  ✔ Downloading benchmark script...
+                </AnimatedSpan>
 
-              <p className="text-[10px] text-muted-foreground">
-                Demo data only – benchmark engine & real measurements will be
-                implemented later.
-              </p>
+                <AnimatedSpan className="text-green-500">
+                  ✔ Running ping tests...
+                </AnimatedSpan>
+
+                <AnimatedSpan className="text-blue-500">
+                  → google.com: 28.13 ms
+                </AnimatedSpan>
+
+                <AnimatedSpan className="text-blue-500">
+                  → cloudflare.com: 32.45 ms
+                </AnimatedSpan>
+
+                <AnimatedSpan className="text-green-500">
+                  ✔ Running download test...
+                </AnimatedSpan>
+
+                <AnimatedSpan className="text-blue-500">
+                  → Speed: 920.5 Mbps
+                </AnimatedSpan>
+
+                <AnimatedSpan className="text-green-500">
+                  ✔ Calculating score...
+                </AnimatedSpan>
+
+                <TypingAnimation className="text-primary font-semibold">
+                  ✓ Benchmark completed! Score: 8.7/10
+                </TypingAnimation>
+
+                <TypingAnimation className="text-muted-foreground">
+                  Share this result with tocdovps.dev? (y/N)
+                </TypingAnimation>
+              </Terminal>
             </div>
           </div>
         </div>
@@ -164,5 +160,3 @@ export const HeroSection: React.FC = () => {
     </section>
   );
 };
-
-

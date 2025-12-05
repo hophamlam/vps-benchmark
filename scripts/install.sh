@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 ##
-## Simple installer/runner for vps-benchmark-hophamlam
+## Simple installer/runner for tocdovps.dev benchmark script
 ## - Downloads the latest vps-benchmark.sh from GitHub
 ## - Makes it executable
 ## - Runs it
@@ -12,7 +12,7 @@ set -euo pipefail
 
 REPO_RAW_BASE="https://raw.githubusercontent.com/hophamlam/vps-benchmark/refs/heads/main"
 SCRIPT_PATH="scripts/vps-benchmark.sh"
-TMP_FILE="/tmp/vps-benchmark-hophamlam.sh"
+TMP_FILE="/tmp/tocdovps-dev-benchmark.sh"
 
 cleanup() {
   rm -f "${TMP_FILE}"
@@ -20,7 +20,7 @@ cleanup() {
 
 trap cleanup EXIT
 
-echo ">>> vps-benchmark-hophamlam installer"
+echo ">>> tocdovps.dev benchmark installer"
 echo "Downloading latest benchmark script..."
 
 if ! command -v curl >/dev/null 2>&1; then

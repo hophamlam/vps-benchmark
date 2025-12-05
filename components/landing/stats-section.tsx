@@ -33,7 +33,7 @@ export const StatsSection: React.FC<StatsSectionProps> = ({ stats }) => {
       <div className="mx-auto flex max-w-6xl flex-col gap-4 px-4 py-6 md:flex-row md:items-stretch md:justify-between md:py-8">
         <div className="mb-2 md:mb-0 md:w-1/3">
           <h2 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
-            vps-benchmark-hophamlam
+            tocdovps.dev
           </h2>
           <p className="mt-1 text-xs text-muted-foreground">
             {t("stats.subtitle")}

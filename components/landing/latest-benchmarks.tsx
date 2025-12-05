@@ -1,20 +1,12 @@
 "use client";
 
 import React from "react";
-import Link from "next/link";
 import { useI18n } from "@/components/i18n/i18n-provider";
-
-type LatestBenchmarkItem = {
-  id: string;
-  createdAt: string;
-  serverLabel: string | null;
-  avgPingMs: string | null;
-  downloadMbps: string | null;
-  score: string | null;
-};
+import { BenchmarkTableRow } from "@/components/benchmark/benchmark-table-row";
+import type { BenchmarkRunSummary } from "@/lib/types/benchmark";
 
 type LatestBenchmarksSectionProps = {
-  items: LatestBenchmarkItem[];
+  items: BenchmarkRunSummary[];
 };
 
 /**
@@ -63,31 +55,14 @@ export const LatestBenchmarksSection: React.FC<LatestBenchmarksSectionProps> = (
               </thead>
               <tbody>
                 {items.map((item) => (
-                <tr
-                  key={item.id}
-                  className="border-t border-border/60 hover:bg-muted/30"
-                >
-                  <td className="px-3 py-2 align-middle text-[11px] text-muted-foreground">
-                    {item.createdAt}
-                  </td>
-                    <td className="max-w-[160px] px-3 py-2 align-middle text-[11px]">
-                      <Link
-                        href={`/result/${item.id}`}
-                        className="line-clamp-2 break-words hover:text-primary hover:underline"
-                      >
-                        {item.serverLabel || "—"}
-                      </Link>
-                    </td>
-                  <td className="px-3 py-2 text-right align-middle text-[11px]">
-                    {item.avgPingMs ?? "—"}
-                  </td>
-                  <td className="px-3 py-2 text-right align-middle text-[11px]">
-                    {item.downloadMbps ?? "—"}
-                  </td>
-                  <td className="px-3 py-2 text-right align-middle text-[11px] font-semibold text-primary">
-                    {item.score ?? "—"}
-                  </td>
-                </tr>
+                  <BenchmarkTableRow
+                    key={item.id}
+                    item={item}
+                    showRank={false}
+                    showAbsoluteTime={false}
+                    showViewButton={false}
+                    textSize="xs"
+                  />
                 ))}
               </tbody>
             </table>
